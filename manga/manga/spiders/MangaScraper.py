@@ -33,6 +33,12 @@ class MangaSpider(scrapy.Spider):
         title = response.meta['title']
         volume = response.meta['volume']
         waktupublish = response.meta['waktupublish']
+        possible_genres = response.css("div.leftside div.spaceit_pad").css('span[itemprop="genre"]')
+        genres_text = []
+        if possible_genres:
+            for genre in possible_genres[:3]:  
+                genre_name = " ".join(genre.css('::text').get().strip().split()[:3])
+                genres_text.append(genre_name)
 
         # Menghasilkan item dalam format JSON langsung di yield
         yield {
@@ -40,6 +46,7 @@ class MangaSpider(scrapy.Spider):
             'score': response.css("div.score-label::text").get(),
             'popularity': response.css("span.numbers.popularity strong::text").get().strip('#'),
             'title': title,
+            'genres': ", ".join(genres_text),
             'volume': volume,
             'waktupublish': waktupublish,
             'synopsis': (response.css('span[itemprop="description"]::text').getall()[0] +
