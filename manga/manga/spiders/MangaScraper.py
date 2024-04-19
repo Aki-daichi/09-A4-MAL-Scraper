@@ -44,7 +44,7 @@ class MangaSpider(scrapy.Spider):
         yield {
             'rank': rank,
             'score': response.css("div.score-label::text").get(),
-            'popularity': response.css("span.numbers.popularity strong::text").get().strip('#'),
+            'popularity': response.css("span.numbers.members strong::text").get(),
             'title': title,
             'genres': ", ".join(genres_text),
             'volume': volume,
