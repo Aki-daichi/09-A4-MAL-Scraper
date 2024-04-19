@@ -5,6 +5,7 @@
     <title>Daftar Manga</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- CSS Styles -->
     <style>
@@ -47,15 +48,15 @@
             </div>
             <div id="result-count" class="mb-3">Jumlah hasil pencarian: 0</div>
 
-            <div id="manga-list">
+            <div id="manga-list" class="table-responsive">
                 <!-- Data manga akan ditampilkan di sini -->
             </div>
 
             <div class="row mt-5 mb-5">
-                <div class="col-md-6">
+                <div class="col-md-6 col-sm-6 text-left">
                     <button id="prev-page" class="btn btn-primary" disabled>Halaman Sebelumnya</button>
                 </div>
-                <div class="col-md-6 text-right">
+                <div class="col-md-6 col-sm-6 text-right">
                     <button id="next-page" class="btn btn-primary">Halaman Berikutnya</button>
                 </div>
             </div>
