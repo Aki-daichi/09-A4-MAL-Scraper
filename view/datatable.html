@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Daftar Manga</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- CSS Styles -->
+    <style>
+        /* Custom CSS styles */
+        .manga-image {
+            width: 80px;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body class="m-0 p-0">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-4">
+        <a class="navbar-brand" href="#"><b>A4.</b></a> <!-- Logo di sebelah kiri -->
+        <div class="ml-auto"> <!-- Elemen akan muncul di sebelah kanan -->
+            <a href="#" class="btn btn-light mr-4">Kembali</a> <!-- Tombol Kembali dengan warna putih -->
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="my-4"><b>Data Scraping</b></h1>
+        <h1 class="my-4"><b>Top Manga My Anime List</b></h1>
+        <div class="container mt-4">
+            <div class="row mb-3">
+                <div class="col-md-8">
+                    <input id="search-input" class="form-control" type="text" placeholder="Cari manga berdasarkan nama...">
+                </div>
+                <div class="col-md-4">
+                    <select id="manga-count" class="form-control">
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </div>
+            <div id="result-count" class="mb-3">Jumlah hasil pencarian: 0</div>
+
+            <div id="manga-list">
+                <!-- Data manga akan ditampilkan di sini -->
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <button id="prev-page" class="btn btn-secondary" disabled>Halaman Sebelumnya</button>
+                </div>
+                <div class="col-md-6 text-right">
+                    <button id="next-page" class="btn btn-primary">Halaman Berikutnya</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        let mangaData = [];
+        let currentPage = 1;
+        let mangaPerPage = 10;
+
+        const resultCountElement = document.getElementById("result-count");
+
+        // Fungsi untuk memuat data JSON
+        async function loadJSONData() {
+            try {
+                const response = await fetch('/manga/hasil.json');
+                mangaData = await response.json();
+                displayMangaData(mangaData);
+            } catch (error) {
+                console.error('Error loading JSON data:', error);
+            }
+        }
+
+        // Fungsi untuk menampilkan data manga dalam tabel
+        function displayMangaData(data) {
+            const mangaListElement = document.getElementById("manga-list");
+            
+            // Menghapus konten lama
+            mangaListElement.innerHTML = '';
+
+            // Membuat tabel
+            const table = document.createElement("table");
+            table.classList.add("table", "table-bordered", "table-hover");
+
+            // Membuat header tabel
+            const thead = document.createElement("thead");
+            const headerRow = document.createElement("tr");
+            const headers = ["Gambar", "Judul", "Penulis", "Volume", "Waktu Publikasi", "Peringkat", "Skor", "Popularitas", "Sinopsis"];
+            headers.forEach(headerText => {
+                const headerCell = document.createElement("th");
+                headerCell.textContent = headerText;
+                headerRow.appendChild(headerCell);
+            });
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            // Membuat badan tabel (tbody)
+            const tbody = document.createElement("tbody");
+
+            // Menghitung indeks awal dan akhir data yang akan ditampilkan pada halaman saat ini
+            const startIndex = (currentPage - 1) * mangaPerPage;
+            const endIndex = Math.min(startIndex + mangaPerPage, data.length);
+
+            // Mengisi tabel dengan data manga
+            for (let i = startIndex; i < endIndex; i++) {
+                const manga = data[i];
+
+                // Membuat baris untuk manga
+                const row = document.createElement("tr");
+
+                // Membuat sel untuk gambar manga
+                const imageCell = document.createElement("td");
+                const mangaImageElement = document.createElement("img");
+                mangaImageElement.src = manga.imglink;
+                mangaImageElement.classList.add("manga-image");
+                imageCell.appendChild(mangaImageElement);
+                row.appendChild(imageCell);
+
+                // Membuat sel-sel untuk informasi manga
+                const fields = [
+                    manga.title,
+                    manga.author,
+                    manga.volume,
+                    manga.waktupublish,
+                    manga.rank,
+                    manga.score,
+                    manga.popularity,
+                    manga.synopsis
+                ];
+                
+                // Iterasi melalui setiap field dan buat sel
+                fields.forEach((field, index) => {
+                    const cell = document.createElement("td");
+                    
+                    // Jika field sinopsis (index ke-7), tambahkan fitur "Show more"
+                    if (index === 7) {
+                        // Simpan sinopsis lengkap dalam atribut data
+                        cell.dataset.fullSynopsis = field;
+
+                        // Jika sinopsis panjang, tampilkan sebagian dan tambahkan tautan "Show more"
+                        if (field.length > 100) {
+                            cell.innerHTML = `
+                                ${field.substring(0, 100)}...
+                                <a href="#" class="show-more">Lihat selengkapnya</a>
+                            `;
+                        } else {
+                            cell.textContent = field;
+                        }
+                    } else {
+                        // Tampilkan field lainnya secara langsung
+                        cell.textContent = field;
+                    }
+                    
+                    row.appendChild(cell);
+                });
+
+                // Tambahkan baris ke badan tabel
+                tbody.appendChild(row);
+            }
+
+            // Tambahkan badan tabel ke tabel
+            table.appendChild(tbody);
+
+            // Tambahkan tabel ke elemen mangaListElement
+            mangaListElement.appendChild(table);
+
+            // Atur tombol navigasi halaman
+            const prevPageButton = document.getElementById("prev-page");
+            const nextPageButton = document.getElementById("next-page");
+
+            prevPageButton.disabled = currentPage === 1;
+            const maxPage = Math.ceil(data.length / mangaPerPage);
+            nextPageButton.disabled = currentPage >= maxPage;
+
+            // Perbarui jumlah hasil pencarian
+            resultCountElement.textContent = `Jumlah hasil pencarian: ${data.length}`;
+
+            // Pasang event listener pada tautan "Show more" dan "Show less"
+            attachSynopsisEventListeners();
+        }
+
+        // Fungsi untuk memperluas atau menutup sinopsis
+function toggleSynopsis(event) {
+    event.preventDefault(); // Mencegah perilaku default dari tautan
+
+    const link = event.target;
+    const synopsisCell = link.parentElement;
+    const fullSynopsis = synopsisCell.dataset.fullSynopsis;
+
+    // Mengecek apakah sinopsis sedang diperluas
+    if (link.classList.contains('show-more')) {
+        // Perluas sinopsis
+        synopsisCell.innerHTML = `${fullSynopsis} <a href="#" class="show-less">Tutup</a>`;
+        link.classList.remove('show-more');
+        link.classList.add('show-less');
+    } else if (link.classList.contains('show-less')) {
+        // Kembalikan ke tampilan pendek
+        synopsisCell.innerHTML = `${fullSynopsis.substring(0, 100)}... <a href="#" class="show-more">Lihat selengkapnya</a>`;
+        link.classList.remove('show-less');
+        link.classList.add('show-more');
+    }
+
+    // Pasang event listener kembali pada tautan yang diperbarui
+    attachSynopsisEventListeners();
+}
+
+// Fungsi untuk memasang event listener pada tautan "Show more" dan "Show less"
+function attachSynopsisEventListeners() {
+    // Mendapatkan semua tautan "show-more" dan "show-less" yang baru
+    const showMoreLinks = document.querySelectorAll('.show-more');
+    const showLessLinks = document.querySelectorAll('.show-less');
+
+    // Pasang event listener pada tautan "show-more"
+    showMoreLinks.forEach(link => {
+        link.addEventListener('click', toggleSynopsis);
+    });
+
+    // Pasang event listener pada tautan "show-less"
+    showLessLinks.forEach(link => {
+        link.addEventListener('click', toggleSynopsis);
+    });
+}
+
+
+        // Fungsi untuk berpindah ke halaman sebelumnya
+        function goToPreviousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                displayMangaData(mangaData);
+                window.scrollTo(0, 0); // Menggulir ke bagian atas halaman
+            }
+        }
+
+        // Fungsi untuk berpindah ke halaman berikutnya
+        function goToNextPage() {
+            const maxPage = Math.ceil(mangaData.length / mangaPerPage);
+            if (currentPage < maxPage) {
+                currentPage++;
+                displayMangaData(mangaData);
+                window.scrollTo(0, 0); // Menggulir ke bagian atas halaman
+            }
+        }
+
+        // Fungsi untuk mencari manga berdasarkan nama
+        function searchMangaByName() {
+            const searchInput = document.getElementById("search-input").value.toLowerCase();
+            const filteredMangaData = mangaData.filter(manga => manga.title.toLowerCase().includes(searchInput));
+            displayMangaData(filteredMangaData);
+            currentPage = 1; // Reset halaman ke halaman pertama
+        }
+
+        // Fungsi untuk mengubah jumlah manga per halaman
+        function changeMangaCount() {
+            const mangaCountInput = document.getElementById("manga-count");
+            mangaPerPage = parseInt(mangaCountInput.value);
+            currentPage = 1; // Reset halaman ke halaman pertama
+            displayMangaData(mangaData);
+        }
+
+        // Pasang event listener pada tombol dan input
+        document.getElementById("prev-page").addEventListener("click", goToPreviousPage);
+        document.getElementById("next-page").addEventListener("click", goToNextPage);
+        document.getElementById("search-input").addEventListener("input", searchMangaByName);
+        document.getElementById("manga-count").addEventListener("change", changeMangaCount);
+
+        // Muat data JSON dan tampilkan manga pada saat halaman dimuat
+        loadJSONData();
+    </script>
+</body>
+
+</html>
