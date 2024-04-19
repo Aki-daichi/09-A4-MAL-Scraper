@@ -8,7 +8,7 @@
 </head>
 <body>
   <!-- NAVBAR -->
-      <nav class="navbar sticky-top navbar-expand-lg bg-primary" aria-label="navbar">
+      <nav class="navbar sticky-top navbar-expand-lg bg-primary px-3 py-1" aria-label="navbar">
         <div class="container-fluid">
           <!-- "Hamburger Button" -->
           <a class="navbar-brand disabled">
@@ -52,7 +52,7 @@
       </div>
 
       <!-- Members -->
-      <div class="album py-5 bg-body-tertiary" id="members">
+      <div class="album py-5 bg-body-secondary" id="members">
         <div class="container">
     
           <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
@@ -139,12 +139,35 @@
         </div>
       </div>
 
-      <!-- Footer -->
-      <div class="container">
-        <footer class="d-flex flex-wrap justify-content-center align-items-center py-3 my-4 border-top">
-          <a class="text-body-secondary text-decoration-none">&copy; 2024 Group A4 - Polban</a>
-        </footer>
+      <!-- Projects -->
+      <div class="container py-5" id="projects">
+        <h2 id="tabledesc">Projects</h2>
+        <table class="table" aria-describedby="tabledesc">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Judul</th>
+              <th scope="col">Deskripsi</th>
+              <th scope="col">Link</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Manga Scraper</td>
+              <td>Database Manga Scraper menggunakan Python dan Scrapy</td>
+              <td>
+                <a href="datatable.html" class="btn btn-primary btn-sm" role="button">Kunjungi</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+
+      <!-- Footer -->
+        <footer class="d-flex flex-wrap justify-content-center align-items-center py-3 bg-primary">
+          <a class="text-white text-decoration-none disabled">&copy; 2024 Group A4 - Polban</a>
+        </footer>
 
     <script src="../bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
 </body>
