@@ -7,29 +7,34 @@
     <link href="../bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-      <nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary rounded" aria-label="navbar">
+  <!-- NAVBAR -->
+      <nav class="navbar sticky-top navbar-expand-lg bg-primary" aria-label="navbar">
         <div class="container-fluid">
-          <a class="navbar-brand">Navbar</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+          <!-- "Hamburger Button" -->
+          <a class="navbar-brand disabled">
+            <img src="resources/img/logo.png" alt="Brand Logo" height="40">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav-opsi" aria-controls="nav-opsi" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-  
-          <div class="collapse navbar-collapse" id="navbarsExample09">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <!-- Links -->
+          <div class="collapse navbar-collapse" id="nav-opsi">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link" href="#home">Home</a>
+                <a class="nav-link text-white" href="#home">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#members">Members</a>
+                <a class="nav-link text-white" href="#members">Members</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#projects">Projects</a>
+                <a class="nav-link text-white" href="#projects">Projects</a>
               </li>
             </ul>
           </div>
         </div>
       </nav>
 
+      <!-- Heroes -->
       <div class="container col-xxl-8 px-4 py-5" id="home">
         <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
           <div class="col-10 col-sm-8 col-lg-6">
@@ -46,6 +51,7 @@
         </div>
       </div>
 
+      <!-- Members -->
       <div class="album py-5 bg-body-tertiary" id="members">
         <div class="container">
     
@@ -131,6 +137,7 @@
         </div>
       </div>
 
+      <!-- Footer -->
       <div class="container">
         <footer class="d-flex flex-wrap justify-content-center align-items-center py-3 my-4 border-top">
           <a href="https://www.example.com" class="text-body-secondary text-decoration-none">&copy; 2024 Group A4 - Polban</a>
