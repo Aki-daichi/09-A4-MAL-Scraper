@@ -1,6 +1,6 @@
 import json
 
-file_location = '../../../docs/hasil.json'
+file_location = '../docs/hasil.json'
 # Load the JSON data
 with open(file_location, 'r', encoding='utf-8', errors='ignore') as file:
     data = json.load(file)
