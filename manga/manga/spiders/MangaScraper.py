@@ -16,6 +16,7 @@ class MangaSpider(scrapy.Spider):
             rank = mangas.css("td.rank.ac span.lightLink::text").get()
             volume = mangas.css("div.information.di-ib.mt4::text").getall()[0].replace('\n', ' ').strip()
             waktupublish = mangas.css("div.information.di-ib.mt4::text").getall()[1].replace('\n', ' ').strip()
+            popularity = mangas.css("div.information.di-ib.mt4::text").getall()[2].replace('\n', ' ').strip()
             title = mangas.css('a.hoverinfo_trigger.fs14.fw-b::text').get()
             links = mangas.css("a.hoverinfo_trigger::attr(href)").get()
 
@@ -24,6 +25,7 @@ class MangaSpider(scrapy.Spider):
             request.meta['rank'] = rank
             request.meta['volume'] = volume
             request.meta['waktupublish'] = waktupublish
+            request.meta['popularity'] = popularity
             request.meta['title'] = title
             yield request
 
@@ -33,6 +35,7 @@ class MangaSpider(scrapy.Spider):
         title = response.meta['title']
         volume = response.meta['volume']
         waktupublish = response.meta['waktupublish']
+        popularity = response.meta['popularity']
         possible_genres = response.css("div.leftside div.spaceit_pad").css('span[itemprop="genre"]')
         genres_text = []
         if possible_genres:
@@ -56,4 +59,4 @@ class MangaSpider(scrapy.Spider):
             'author': response.css("span.information.studio.author a::text").get()
         }
 
-'''scrapy crawl manga-spider -o ..\view\hasil.json'''
+'''scrapy crawl manga-spider -o ..\..\..\docs\hasil.json'''
