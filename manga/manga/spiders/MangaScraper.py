@@ -59,4 +59,4 @@ class MangaSpider(scrapy.Spider):
             'author': response.css("span.information.studio.author a::text").get()
         }
 
-'''scrapy crawl manga-spider -o ..\..\..\view\hasil.json'''
+'''scrapy crawl manga-spider -o ..\..\..\docs\hasil.json'''
